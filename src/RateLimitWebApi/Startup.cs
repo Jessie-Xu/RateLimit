@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RateLimitWebApi.Middleware;
 using RateLimitWebApi.Models;
 
 namespace RateLimitWebApi
@@ -37,6 +38,8 @@ namespace RateLimitWebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            // Use customised rate limit middleware to throttle http requests
+            app.UseRateLimit();
 
             app.UseHttpsRedirection();
 

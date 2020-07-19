@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace RateLimitWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DemoController : ControllerBase
     {
         private readonly ILogger<DemoController> _logger;

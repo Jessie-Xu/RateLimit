@@ -1,8 +1,9 @@
-﻿using RateLimitWebApi.Models;
+﻿using Microsoft.Extensions.Options;
+using RateLimitWebApi.Models;
 using System;
 using System.Collections.Generic;
 
-namespace RateLimitWebApi.Middleware
+namespace RateLimitWebApi.Models
 {
     public class ApiRequestContainer
     {
@@ -12,21 +13,20 @@ namespace RateLimitWebApi.Middleware
         public static ApiRequestContainer Instance => _instance.Value;
 
         private readonly Queue<DateTime> _requestPool;
-        private readonly ApiRequestThrottleOptions _options;
+        
 
         private ApiRequestContainer()
         {
             _requestPool = new Queue<DateTime>();
-            _options = new ApiRequestThrottleOptions();
         }
- 
-        public bool IsExceedRateLimit()
+
+        public bool HasExceededRateLimit(int limit, TimeSpan timeSpan)
         {
             while ((_requestPool.Count > 0) 
-                && (_requestPool.Peek() < DateTime.UtcNow.Subtract(_options.GetTimeSpan())))
+                && (_requestPool.Peek() < DateTime.UtcNow.Subtract(timeSpan)))
                 _requestPool.Dequeue();
 
-            return _requestPool.Count >= _options.Limit;
+            return _requestPool.Count >= limit;
         }
 
         public void EnqueueRequestPool()
