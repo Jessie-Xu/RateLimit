@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,12 @@ namespace RateLimitWebApi.Middleware
 
         public async Task Invoke(HttpContext context)
         {
+            if (!_settings.EnableThrottle)
+            {
+                await _next.Invoke(context);
+                return;
+            }
+
             // Check if the number of API requests in the configured time interval has exceeded the configured rate limit
             if (!ApiRequestContainer.Instance.HasExceededRateLimit(_settings.Limit, _settings.GetTimeSpan()))
             {
@@ -34,10 +41,19 @@ namespace RateLimitWebApi.Middleware
             }
             else
             {
-                // Return 429 Too many requests and customised header
+                // Return 429 Too Many Requests and Retry-After header
+                var message = string.Format(
+                $"API requests rate limit exceeded. Allowed request rate is {_settings.Limit} per {_settings.Interval}");
+                var retryAfterDateTime = ApiRequestContainer.Instance.RetryAfter(_settings.GetTimeSpan());
 
+                context.Response.Headers["Retry-After"] = retryAfterDateTime.ToString("r");
+                context.Response.Headers["Retry-After-Seconds"] = retryAfterDateTime.Subtract(DateTime.UtcNow).Seconds.ToString();
+                context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
+                context.Response.ContentType = "text/plain";
+
+                await context.Response.WriteAsync(message).ConfigureAwait(false);
+                return;
             }
-
             await _next.Invoke(context);
         }
     }

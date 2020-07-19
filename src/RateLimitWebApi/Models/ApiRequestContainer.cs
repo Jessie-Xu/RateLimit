@@ -33,5 +33,10 @@ namespace RateLimitWebApi.Models
         {
             _requestPool.Enqueue(DateTime.UtcNow);
         }
+
+        public DateTime RetryAfter(TimeSpan timeSpan)
+        {
+            return _requestPool.Peek().Add(timeSpan);
+        }
     }
 }
