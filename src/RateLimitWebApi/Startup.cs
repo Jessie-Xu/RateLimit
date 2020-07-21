@@ -38,6 +38,7 @@ namespace RateLimitWebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
             // Use customised rate limit middleware to throttle http requests
             app.UseRateLimit();
 

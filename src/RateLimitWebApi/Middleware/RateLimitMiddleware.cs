@@ -42,12 +42,14 @@ namespace RateLimitWebApi.Middleware
             else
             {
                 // Return 429 Too Many Requests and Retry-After header
-                var message = string.Format(
-                $"API requests rate limit exceeded. Allowed request rate is {_settings.Limit} per {_settings.Interval}");
                 var retryAfterDateTime = ApiRequestContainer.Instance.RetryAfter(_settings.GetTimeSpan());
+                var retryAfterSeconds = retryAfterDateTime.Subtract(DateTime.UtcNow).Seconds + 1;
+                var message = string.Format(
+                $"Rate limit exceeded. Try again in #{retryAfterSeconds} seconds." +
+                $" Allowed request rate is {_settings.Limit} per {_settings.Interval}");
 
                 context.Response.Headers["Retry-After"] = retryAfterDateTime.ToString("r");
-                context.Response.Headers["Retry-After-Seconds"] = retryAfterDateTime.Subtract(DateTime.UtcNow).Seconds.ToString();
+                context.Response.Headers["Retry-After-Seconds"] = retryAfterSeconds.ToString();
                 context.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
                 context.Response.ContentType = "text/plain";
 
