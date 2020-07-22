@@ -1,7 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Middleware\**" />
+    <Compile Remove="Models\**" />
+    <Content Remove="Middleware\**" />
+    <Content Remove="Models\**" />
+    <EmbeddedResource Remove="Middleware\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Middleware\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RateLimitModule\RateLimitModule.csproj" />
+  </ItemGroup>
 
 </Project>

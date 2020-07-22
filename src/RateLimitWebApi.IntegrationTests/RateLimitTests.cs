@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using RateLimitWebApi.IntegrationTests.Models;
-using RateLimitWebApi.Models;
+using RateLimitModule.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace RateLimitWebApi.IntegrationTests
         private const string TestApiBaseUri = "https://localhost:50004";
         private const string TestApi = "/api/demo";
         private readonly HttpClient _client;
-        private readonly ApiRequestThrottleOptions _settings;
+        private readonly RequestThrottleOptions _settings;
 
         public RateLimitTests(RateLimitWebApiFactory factory)
         {

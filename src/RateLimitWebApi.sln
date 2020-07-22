@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimitWebApi", "RateLimi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RateLimitWebApi.IntegrationTests", "RateLimitWebApi.IntegrationTests\RateLimitWebApi.IntegrationTests.csproj", "{01370D66-7673-4691-A099-57B93EB7D151}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateLimitModule", "RateLimitModule\RateLimitModule.csproj", "{6517443A-4A61-473D-8122-A0F424539CEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{01370D66-7673-4691-A099-57B93EB7D151}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01370D66-7673-4691-A099-57B93EB7D151}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01370D66-7673-4691-A099-57B93EB7D151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6517443A-4A61-473D-8122-A0F424539CEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6517443A-4A61-473D-8122-A0F424539CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6517443A-4A61-473D-8122-A0F424539CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6517443A-4A61-473D-8122-A0F424539CEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

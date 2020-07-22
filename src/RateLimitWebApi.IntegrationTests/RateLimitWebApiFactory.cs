@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using RateLimitWebApi.Models;
+using RateLimitModule.Models;
 
 namespace RateLimitWebApi.IntegrationTests
 {
     public class RateLimitWebApiFactory : WebApplicationFactory<Startup>
     {
-        public ApiRequestThrottleOptions Settings { get; private set; }
+        public RequestThrottleOptions Settings { get; private set; }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -28,7 +28,7 @@ namespace RateLimitWebApi.IntegrationTests
                     // Create a scope to obtain a reference to ApiRequestThrottleOptions
                     using (var scope = sp.CreateScope())
                     {
-                        Settings = scope.ServiceProvider.GetRequiredService<IOptions<ApiRequestThrottleOptions>>().Value;
+                        Settings = scope.ServiceProvider.GetRequiredService<IOptions<RequestThrottleOptions>>().Value;
                     }
                 });
         }
