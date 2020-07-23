@@ -30,3 +30,18 @@ The thread will sleep the number of seconds in Retry-After-Seconds header
 and then send another API request.
 
 It will assert if the response returning http status 200 OK. 
+
+# Design
+The rate limit strategy is implemented in the RateLimitModule as a middleware for web services to integrate with.
+
+The configuration of the rate limit can be set in appsettings.json file
+The default client settings in the appsettings.json is the settings of clientId *
+The default client settings will be applied to any clients listed in the ClientList but don't have their own configurations in ClientSettings
+The default client settings will also be applied to any anonymous clients.
+All anonymous clients will be treated as one requestor, meaning the default client settings will be applied in the application level.
+
+The DateTime of a request will be stored in a queue per client. 
+When the a particular requestor/client or any anonymous client makes a request,
+if the number of items in the client request queue reaches the rate limit of this client,
+The application will return 429 Too Many Request with the text 
+"Rate limit exceeded. Try again in #{n} seconds. Allowed request rate is #{n} per {time period}"".

@@ -13,21 +13,19 @@ namespace RateLimitModule.Middleware
     public class RateLimitMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly RequestThrottleOptions _settings;
         private readonly ClientService _clientService;
         private readonly ILogger<RateLimitMiddleware> _logger;
 
         public RateLimitMiddleware(RequestDelegate next, IOptions<RequestThrottleOptions> settings, ILogger<RateLimitMiddleware> logger)
         {
             _next = next;
-            _settings = settings.Value;
             _logger = logger;
             _clientService = new ClientService(settings);
         }
 
         public async Task Invoke(HttpContext context)
         {
-            if (!_settings.EnableThrottle)
+            if (!_clientService.RateLimitApplied())
             {
                 await _next.Invoke(context);
                 return;
