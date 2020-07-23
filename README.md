@@ -34,6 +34,7 @@ It will assert if the response returning http status 200 OK.
 The rate limit strategy is implemented in the RateLimitModule as a middleware for web services to integrate with.
 
 The configuration of the rate limit can be set in appsettings.json file.
+"Interval" can be set to {n}s, {n}m, {n}h or {n}d, meaning {n} seconds, minutes, hours or days.
 The default client settings in the appsettings.json is the settings of clientId "*".
 The default client settings will be applied to any clients listed in the ClientList but don't have their own configurations in ClientSettings.
 The default client settings will also be applied to any anonymous clients.
