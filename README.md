@@ -1,6 +1,5 @@
 # RateLimitWebApi
-RateLimitWebApi solution uses ASP.NET Core framework 
-and provides an option to throttle http requests in an application level.
+RateLimitWebApi solution uses ASP.NET Core framework and provides an option to throttle http requests in an application level.
 The rate limit configuration can be customised in appsettings.json file.
 
 # Projects
@@ -34,9 +33,9 @@ It will assert if the response returning http status 200 OK.
 # Design
 The rate limit strategy is implemented in the RateLimitModule as a middleware for web services to integrate with.
 
-The configuration of the rate limit can be set in appsettings.json file
-The default client settings in the appsettings.json is the settings of clientId "*"
-The default client settings will be applied to any clients listed in the ClientList but don't have their own configurations in ClientSettings
+The configuration of the rate limit can be set in appsettings.json file.
+The default client settings in the appsettings.json is the settings of clientId "*".
+The default client settings will be applied to any clients listed in the ClientList but don't have their own configurations in ClientSettings.
 The default client settings will also be applied to any anonymous clients.
 All anonymous clients will be treated as one requestor, meaning the default client settings will be applied in the application level.
 
