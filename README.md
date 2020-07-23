@@ -13,7 +13,7 @@ and having Microsoft.AspNetCore.Mvc.Testing Nuget package installed.
 There are two test methods in the test project in RateLimitTests.cs
 ===========================
 PLEASE RUN THEM SEPARATELY! 
-(Because if both tests run together, there will be more API requests than the individual test expected 
+(BecauseÂ if both tests run together, there will be more API requests than the individual test expected 
 and causing incorrect/failed test results)
 ===========================
 
@@ -44,4 +44,4 @@ The DateTime of a request will be stored in a queue per client.
 When the a particular requestor/client or any anonymous client makes a request,
 if the number of items in the client request queue reaches the rate limit of this client,
 The application will return 429 Too Many Request with the text 
-"Rate limit exceeded. Try again in #{n} seconds. Allowed request rate is #{n} per {time period}"".
+"Rate limit exceeded. Try again in #{n} seconds. Allowed request rate is #{n} per {time period}".
