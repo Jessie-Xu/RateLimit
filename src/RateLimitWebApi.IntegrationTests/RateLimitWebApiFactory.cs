@@ -9,7 +9,7 @@ namespace RateLimitWebApi.IntegrationTests
 {
     public class RateLimitWebApiFactory : WebApplicationFactory<Startup>
     {
-        public RequestThrottleOptions Settings { get; private set; }
+        public IOptions<RequestThrottleOptions> Settings { get; private set; }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -26,10 +26,8 @@ namespace RateLimitWebApi.IntegrationTests
                     var sp = services.BuildServiceProvider();
 
                     // Create a scope to obtain a reference to ApiRequestThrottleOptions
-                    using (var scope = sp.CreateScope())
-                    {
-                        Settings = scope.ServiceProvider.GetRequiredService<IOptions<RequestThrottleOptions>>().Value;
-                    }
+                    using var scope = sp.CreateScope();
+                    Settings = scope.ServiceProvider.GetRequiredService<IOptions<RequestThrottleOptions>>();
                 });
         }
     }

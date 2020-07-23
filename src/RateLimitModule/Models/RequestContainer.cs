@@ -5,46 +5,61 @@ namespace RateLimitModule.Models
 {
     public class RequestContainer
     {
-        private static readonly Lazy<RequestContainer> _instance 
+        private readonly object _lock;
+        private readonly IDictionary<string, Queue<DateTime>> _requestPool;
+        private readonly IDictionary<string, object> _locks;
+
+        private static readonly Lazy<RequestContainer> _instance
             = new Lazy<RequestContainer>(() => new RequestContainer());
 
         public static RequestContainer Instance => _instance.Value;
-        private readonly object _enqueueLock; 
-        private readonly object _dequeueLock; 
-        public readonly Queue<DateTime> _requestPool;
-        
 
         private RequestContainer()
         {
-            _enqueueLock = new object();
-            _dequeueLock = new object();
-            _requestPool = new Queue<DateTime>();
+            _lock = new object();
+            _requestPool = new Dictionary<string, Queue<DateTime>>();
+            _locks = new Dictionary<string, object>();
         }
 
-        public bool HasExceededRateLimit(int limit, TimeSpan timeSpan)
+        public bool HasExceededRateLimit(ClientSetting client)
         {
-            while (_requestPool.Count > 0
-            && _requestPool.Peek() < DateTime.UtcNow.Subtract(timeSpan))
+            lock (_lock)
             {
-                lock (_dequeueLock)
+                var requestQueue = GetRequestQueue(client);
+
+                while (requestQueue.Count > 0
+                    && requestQueue.Peek() < DateTime.UtcNow.Subtract(client.GetTimeSpan()))
                 {
-                    _requestPool.Dequeue();
+                    requestQueue.Dequeue();
                 }
+                return requestQueue.Count >= client.Limit;
             }
-            return _requestPool.Count >= limit;
         }
 
-        public void EnqueueRequestPool()
+        public void EnqueueRequestPool(ClientSetting client)
         {
-            lock (_dequeueLock)
+            lock (_lock)
             {
-                _requestPool.Enqueue(DateTime.UtcNow);
+                GetRequestQueue(client).Enqueue(DateTime.UtcNow);
             } 
         }
 
-        public DateTime RetryAfter(TimeSpan timeSpan)
+        public DateTime RetryAfter(ClientSetting client)
         {
-            return _requestPool.Peek().Add(timeSpan);
+            lock (_lock)
+            {
+                return GetRequestQueue(client).Peek().Add(client.GetTimeSpan());
+            }
+        }
+
+        private Queue<DateTime> GetRequestQueue(ClientSetting client)
+        {
+            if (!_requestPool.TryGetValue(client.ClientId, out Queue<DateTime> requestQueue))
+            {
+                requestQueue = new Queue<DateTime>(client.Limit);
+                _requestPool.Add(client.ClientId, requestQueue);
+            }
+            return requestQueue;
         }
     }
 }
